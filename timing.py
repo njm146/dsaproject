@@ -1,0 +1,53 @@
+import time
+from statistics import mean
+import dsaProject
+
+NUM_ITERATIONS = 10
+DENSE_FILES = ['4Vdense.txt', '16Vdense.txt', '32Vdense.txt', '64Vdense.txt', '128Vdense.txt', '256Vdense.txt', '512Vdense.txt', '1024Vdense.txt', 
+    '2048Vdense.txt', '4096Vdense.txt', '8192Vdense.txt', '16384Vdense.txt', '32768Vdense.txt', '65536Vdense.txt']
+DENSE_SAVE_FILE_KRUSKAL = 'Dense Times - Kruskal.txt'
+DENSE_SAVE_FILE_PRIM = 'Dense Times - Prim.txt'
+SPARSE_FILES = ['4Vsparse.txt', '16Vsparse.txt', '32Vsparse.txt', '64Vsparse.txt', '128Vsparse.txt', '256Vsparse.txt', '512Vsparse.txt', '1024Vsparse.txt', 
+    '2048Vsparse.txt', '4096Vsparse.txt', '8192Vsparse.txt', '16384Vsparse.txt', '32768Vsparse.txt', '65536Vsparse.txt']
+SPARSE_SAVE_FILE_KRUSKAL = 'Sparse Times - Kruskal.txt'
+SPARSE_SAVE_FILE_PRIM = 'Sparse Times - Prim.txt'
+
+def loadGraph(filename):
+    with open(filename,'r') as dataset:
+        datasetArray = dataset.read().splitlines()
+        graph = dsaProject.undirectedGraph(int(datasetArray[0]))
+        for i in range(2, len(datasetArray)): #Add all of the edges to the graph
+            newEdge = datasetArray[i].split(' ')
+            graph.addEdge(int(newEdge[0]), int(newEdge[1]), float(newEdge[2]))
+    return graph
+
+def timeFunc(func, *args):
+    def timeIter():
+        start = time.time_ns()
+        func(*args)
+        end = time.time_ns()
+        return end - start
+    times = [timeIter() for _ in range(NUM_ITERATIONS)]
+    return mean(times)
+
+def save(filename: str, table: dict) -> None:
+    with open(filename,'w+') as file:
+        for label,time in sorted(table.items(), key=lambda i:int(i[0])):
+            file.write(str(label) + ': ' + str(time) + '\n')
+
+if __name__ == '__main__':
+    denseGraphs = [loadGraph(filename) for filename in DENSE_FILES]
+
+    denseTimesKruskal = {file[:file.find('V')]: timeFunc(dsaProject.kruskal,graph) for file,graph in zip(DENSE_FILES,denseGraphs)}
+    save(DENSE_SAVE_FILE_KRUSKAL,denseTimesKruskal)
+
+    denseTimesPrim = {file[:file.find('V')]: timeFunc(dsaProject.prim,graph) for file,graph in zip(DENSE_FILES,denseGraphs)}
+    save(DENSE_SAVE_FILE_PRIM,denseTimesPrim)
+
+    sparseGraphs = [loadGraph(filename) for filename in SPARSE_FILES]
+
+    sparseTimesKruskal = {file[:file.find('V')]: timeFunc(dsaProject.kruskal,graph) for file,graph in zip(SPARSE_FILES,sparseGraphs)}
+    save(SPARSE_SAVE_FILE_KRUSKAL,sparseTimesKruskal)
+
+    sparseTimesPrim = {file[:file.find('V')]: timeFunc(dsaProject.prim,graph) for file,graph in zip(SPARSE_FILES,sparseGraphs)}
+    save(SPARSE_SAVE_FILE_PRIM,sparseTimesPrim)
