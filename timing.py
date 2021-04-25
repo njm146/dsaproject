@@ -57,7 +57,7 @@ def makeGraph(filename,tables,labels,k=2,mx=float('inf')):
     plt.legend(handles=[fig[0] for fig in handles])
     plt.title(filename[:filename.find('.')])
     plt.xlabel('Number of Items')
-    plt.ylabel('Average Time Taken (Over 10 Trials)')
+    plt.ylabel('Average Time Taken (Over ' + str(NUM_ITERATIONS) + ' Trials)')
     plt.savefig(filename)
     plt.close()
 
