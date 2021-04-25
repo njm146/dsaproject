@@ -71,9 +71,9 @@ if __name__ == '__main__':
 		filename = sys.argv[3]
 		main(numVert,graphType,filename)
 	except:
-		numVerts = [4096, 8192, 16384, 32768, 65536]
+		numVerts = [16384*(2**i) for i in range(8)]
 		for numVert in numVerts: 
 			main(numVert, 'sparse', str(numVert) + 'Vsparse.txt')
-			main(numVert, 'dense', str(numVert) + 'Vdense.txt')
+			#main(numVert, 'dense', str(numVert) + 'Vdense.txt')
 
 

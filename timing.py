@@ -4,11 +4,10 @@ import dsaProject
 
 NUM_ITERATIONS = 10
 DENSE_FILES = ['4Vdense.txt', '16Vdense.txt', '32Vdense.txt', '64Vdense.txt', '128Vdense.txt', '256Vdense.txt', '512Vdense.txt', '1024Vdense.txt', 
-    '2048Vdense.txt', '4096Vdense.txt', '8192Vdense.txt', '16384Vdense.txt', '32768Vdense.txt', '65536Vdense.txt']
+    '2048Vdense.txt', '4096Vdense.txt']
 DENSE_SAVE_FILE_KRUSKAL = 'Dense Times - Kruskal.txt'
 DENSE_SAVE_FILE_PRIM = 'Dense Times - Prim.txt'
-SPARSE_FILES = ['4Vsparse.txt', '16Vsparse.txt', '32Vsparse.txt', '64Vsparse.txt', '128Vsparse.txt', '256Vsparse.txt', '512Vsparse.txt', '1024Vsparse.txt', 
-    '2048Vsparse.txt', '4096Vsparse.txt', '8192Vsparse.txt', '16384Vsparse.txt', '32768Vsparse.txt', '65536Vsparse.txt']
+SPARSE_FILES = ['4Vsparse.txt'] + [str(16*(2**i)) + 'Vsparse.txt' for i in range(18)]
 SPARSE_SAVE_FILE_KRUSKAL = 'Sparse Times - Kruskal.txt'
 SPARSE_SAVE_FILE_PRIM = 'Sparse Times - Prim.txt'
 
