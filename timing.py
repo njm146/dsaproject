@@ -33,6 +33,24 @@ def save(filename: str, table: dict) -> None:
     with open(filename,'w+') as file:
         for label,time in sorted(table.items(), key=lambda i:int(i[0])):
             file.write(str(label) + ': ' + str(time) + '\n')
+            
+def makeGraph(filename,args):
+    tables = [table for table in args[:len(args)//2]]
+    labels = [label for label in args[len(args)//2:]]
+
+    handles = []
+    for table,label in zip(tables,labels):
+        x,y = list(table.keys()),list(table.values())
+        xnew = np.linspace(min(x),max(x),1000)
+        spl = make_interp_spline(x,y,k=1)
+        ysmooth = spl(xnew)
+        handles.append(plt.plot(xnew,ysmooth,label=label))
+    plt.legend(handles=[fig[0] for fig in handles])
+    plt.title(filename[:filename.find('.')])
+    plt.xlabel('Number of Items')
+    plt.ylabel('Average Path Size')
+    plt.savefig(filename)
+    plt.close()
 
 if __name__ == '__main__':
     denseGraphs = [loadGraph(filename) for filename in DENSE_FILES]
