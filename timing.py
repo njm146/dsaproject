@@ -34,6 +34,12 @@ def save(filename: str, table: dict) -> None:
         for label,time in sorted(table.items(), key=lambda i:int(i[0])):
             file.write(str(label) + ': ' + str(time) + '\n')
             
+def loadTime(filename):
+    with open(filename,'r') as file:
+        timeList = [[int(s.split(': ')[0]),float(s.split(': ')[1])] for s in file.read().split('\n') if s]
+        timeTable = dict((n,t) for n,t in timeList)
+    return timeTable
+            
 def makeGraph(filename,args):
     tables = [table for table in args[:len(args)//2]]
     labels = [label for label in args[len(args)//2:]]
