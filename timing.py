@@ -1,4 +1,7 @@
 import time
+import numpy as np
+from matplotlib import pyplot as plt
+from scipy.interpolate import make_interp_spline
 from statistics import mean
 import dsaProject
 
@@ -29,48 +32,64 @@ def timeFunc(func, *args):
     times = [timeIter() for _ in range(NUM_ITERATIONS)]
     return mean(times)
 
-def save(filename: str, table: dict) -> None:
+def saveTime(filename: str, table: dict) -> None:
     with open(filename,'w+') as file:
         for label,time in sorted(table.items(), key=lambda i:int(i[0])):
             file.write(str(label) + ': ' + str(time) + '\n')
-            
+
 def loadTime(filename):
     with open(filename,'r') as file:
         timeList = [[int(s.split(': ')[0]),float(s.split(': ')[1])] for s in file.read().split('\n') if s]
         timeTable = dict((n,t) for n,t in timeList)
     return timeTable
-            
-def makeGraph(filename,args):
-    tables = [table for table in args[:len(args)//2]]
-    labels = [label for label in args[len(args)//2:]]
 
+def makeGraph(filename,tables,labels,k=2,mx=float('inf')):
     handles = []
     for table,label in zip(tables,labels):
         x,y = list(table.keys()),list(table.values())
+        while x[-1] > mx:
+            x.pop()
+            y.pop()
         xnew = np.linspace(min(x),max(x),1000)
-        spl = make_interp_spline(x,y,k=1)
+        spl = make_interp_spline(x,y,k=k)
         ysmooth = spl(xnew)
         handles.append(plt.plot(xnew,ysmooth,label=label))
     plt.legend(handles=[fig[0] for fig in handles])
     plt.title(filename[:filename.find('.')])
     plt.xlabel('Number of Items')
-    plt.ylabel('Average Path Size')
+    plt.ylabel('Average Time Taken (Over 10 Trials)')
     plt.savefig(filename)
     plt.close()
 
-if __name__ == '__main__':
+def collectData():
     denseGraphs = [loadGraph(filename) for filename in DENSE_FILES]
 
     denseTimesKruskal = {file[:file.find('V')]: timeFunc(dsaProject.kruskal,graph) for file,graph in zip(DENSE_FILES,denseGraphs)}
-    save(DENSE_SAVE_FILE_KRUSKAL,denseTimesKruskal)
+    saveTime(DENSE_SAVE_FILE_KRUSKAL,denseTimesKruskal)
 
     denseTimesPrim = {file[:file.find('V')]: timeFunc(dsaProject.prim,graph) for file,graph in zip(DENSE_FILES,denseGraphs)}
-    save(DENSE_SAVE_FILE_PRIM,denseTimesPrim)
+    saveTime(DENSE_SAVE_FILE_PRIM,denseTimesPrim)
 
     sparseGraphs = [loadGraph(filename) for filename in SPARSE_FILES]
 
     sparseTimesKruskal = {file[:file.find('V')]: timeFunc(dsaProject.kruskal,graph) for file,graph in zip(SPARSE_FILES,sparseGraphs)}
-    save(SPARSE_SAVE_FILE_KRUSKAL,sparseTimesKruskal)
+    saveTime(SPARSE_SAVE_FILE_KRUSKAL,sparseTimesKruskal)
 
     sparseTimesPrim = {file[:file.find('V')]: timeFunc(dsaProject.prim,graph) for file,graph in zip(SPARSE_FILES,sparseGraphs)}
-    save(SPARSE_SAVE_FILE_PRIM,sparseTimesPrim)
+    saveTime(SPARSE_SAVE_FILE_PRIM,sparseTimesPrim)
+
+def displayData():
+    denseTimesKruskal = loadTime(DENSE_SAVE_FILE_KRUSKAL)
+    denseTimesPrim = loadTime(DENSE_SAVE_FILE_PRIM)
+    sparseTimesKruskal = loadTime(SPARSE_SAVE_FILE_KRUSKAL)
+    sparseTimesPrim = loadTime(SPARSE_SAVE_FILE_PRIM)
+
+    makeGraph('Kruskal Times.png', [denseTimesKruskal,sparseTimesKruskal], ['Dense','Sparse'],mx=2048)
+    makeGraph('Prim Times.png', [denseTimesPrim,sparseTimesPrim], ['Dense','Sparse'],mx=2048)
+    makeGraph('Kruskal v Prim (Sparse Graph).png', [sparseTimesKruskal,sparseTimesPrim], ['Kruskal','Prim'])
+    makeGraph('Kruskal v Prim (Dense Graph).png', [denseTimesKruskal,denseTimesPrim], ['Kruskal','Prim'])
+    makeGraph('Kruskal v Prim.png', [denseTimesKruskal,denseTimesPrim,sparseTimesKruskal,sparseTimesPrim], ['Kruskal, Dense','Prim, Dense','Kruskal, Sparse','Prim, Sparse'],mx=2048)
+
+if __name__ == '__main__':
+    #collectData()
+    displayData()
