@@ -70,12 +70,13 @@ class QuickUnionWeight: #Class for implementing the Union Find algorithm, which 
 		self.N = N
 
 		#List which keeps track of all of the pairs in the array of size N through the values at each index
-		self.pairID = [i+1 for i in range(N)]
+		self.pairID = [i for i in range(N)]
 		self.sizeID = [1]*N
 
 	def getRoot(self, element): #Obtains the root index of a particular element by looping through all values until the root is reached
-		while(element != self.pairID[element-1]): #The root of an index is reached when the index position of the element equals the element value itself
-			element = self.pairID[element-1] #Continously set the next index to be searched as the value of the previous element
+		while(element != self.pairID[element]): #The root of an index is reached when the index position of the element equals the element value itself
+			self.pairID[element] = self.pairID[self.pairID[element]] #Path compression
+			element = self.pairID[element] #Continously set the next index to be searched as the value of the previous element
 		return element
 
 	def find(self, elementOne, elementTwo): #Method for determining whether two elements are connected by observing the elements' roots
@@ -87,12 +88,12 @@ class QuickUnionWeight: #Class for implementing the Union Find algorithm, which 
 	def	union(self, elementOne, elementTwo): #To perform the union of two elements in the Quick Union operation, set the root of one tree to the other. Ensures balancing by appending smaller size value root to the root of the larger tree 
 		rootOne = self.getRoot(elementOne)
 		rootTwo = self.getRoot(elementTwo)
-		if(self.sizeID[rootOne-1] < self.sizeID[rootTwo-1]): #If the size value of the tree with root one is smaller than that of root two, then append that to the tree with the larger size, balancing the tree
-			self.pairID[rootOne-1] = rootTwo
-			self.sizeID[rootTwo-1] = self.sizeID[rootTwo-1] + self.sizeID[rootOne-1]
+		if(self.sizeID[rootOne] < self.sizeID[rootTwo]): #If the size value of the tree with root one is smaller than that of root two, then append that to the tree with the larger size, balancing the tree
+			self.pairID[rootOne] = rootTwo
+			self.sizeID[rootTwo] = self.sizeID[rootTwo] + self.sizeID[rootOne]
 		else:
-			self.pairID[rootTwo-1] = rootOne
-			self.sizeID[rootOne-1] = self.sizeID[rootOne-1] + self.sizeID[rootTwo-1]
+			self.pairID[rootTwo] = rootOne
+			self.sizeID[rootOne] = self.sizeID[rootOne] + self.sizeID[rootTwo]
 		return self.pairID
 
 #Helper Functions
@@ -122,7 +123,7 @@ def prim(graph):
 
 		neighbor = graph.adjacencyList[vert[1]] #Get all of the neighbors of the current vertex by observing the adjacency list
 		while neighbor is not None: #Keep looping until all of the neighbors of the current vertex have been seen
-			if not isInMST[neighbor.vertex]: #If the current neighboring vertex is not in the MST, add it to the prioriy queue
+			if not isInMST[neighbor.vertex]: #If the current neighboring vertex is not in the MST, add it to the priority queue
 				costList[neighbor.vertex] = neighbor.edgeWeight
 				edgeList[neighbor.vertex] = vert[1]
 				heapq.heappush(sortedVertexList, [neighbor.edgeWeight, neighbor.vertex])
@@ -131,6 +132,7 @@ def prim(graph):
 	#print(MST) #Displays the edges that make up the minimum spanning tree, given [edgeWeight, vertexOne, vertexTwo]
 	return MSTWeight
 
+#Kruskal's Algorithm - O(E lg E), due to priority queue implementation scheme. Finds the minimum spanning tree, works best on sparse graphs
 def kruskal(graph):
 	unionFind = QuickUnionWeight(graph.numVertices) #Initialize a union find object which keeps track if a path between two vertices exists already or not
 	sortedEdgeList = [] #Initialize the priority queue, which will hold the edges along with the edge weights between two vertices
@@ -153,7 +155,7 @@ def kruskal(graph):
 
 
 if __name__ == '__main__':
-	datasetFile = '16Vdense.txt'#sys.argv[1] #Get the dataset file to be used from the command line
+	datasetFile = sys.argv[1] #Get the dataset file to be used from the command line
 
 	try: #Check if the file that is to be opened exists in the working directory, otherwise throw an error
 		dataset = open(datasetFile, 'r')
