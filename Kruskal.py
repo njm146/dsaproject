@@ -3,17 +3,17 @@ import fibheap
 from Graph import UndirectedGraph
 from UnionFind import UF
 
-def __kruskal(graph: UndirectedGraph, initFunc, popfunc, pushfunc) -> float:
+def __kruskal(graph: UndirectedGraph, initFunc, popFunc, pushFunc) -> float:
     connections = initFunc()
     for nodeA,nodeB in graph:
-        pushfunc(connections,(graph[nodeA,nodeB],nodeA,nodeB))
+        pushFunc(connections,(graph[nodeA,nodeB],nodeA,nodeB))
 
     uf = UF()
     mst = UndirectedGraph()
     while uf.maxSize < graph.numNodes:
-        weight,nodeA,nodeB = popfunc(connections)
+        weight,nodeA,nodeB = popFunc(connections)
         while uf.find(nodeA,nodeB): 
-            weight,nodeA,nodeB = popfunc(connections)
+            weight,nodeA,nodeB = popFunc(connections)
 
         uf.union(nodeA,nodeB)
         mst[nodeA,nodeB] = weight

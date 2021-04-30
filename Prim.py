@@ -3,23 +3,23 @@ import fibheap
 import random
 from Graph import UndirectedGraph
 
-def __prim(graph: UndirectedGraph, initFunc, popfunc, pushfunc) -> float:
+def __prim(graph: UndirectedGraph, initFunc, popFunc, pushFunc) -> float:
     start = random.randint(0,graph.numNodes-1)
     connections = initFunc()
     for end in graph.adjacent(start):
-        pushfunc(connections,(graph[start,end],start,end))
+        pushFunc(connections,(graph[start,end],start,end))
 
     mst = UndirectedGraph()
     while mst.numNodes < graph.numNodes:
-        weight,parent,child = popfunc(connections)
+        weight,parent,child = popFunc(connections)
         while child in mst: 
-            weight,parent,child = popfunc(connections)
+            weight,parent,child = popFunc(connections)
 
         mst[parent,child] = weight
 
         for gchild in graph.adjacent(child):
             if gchild not in mst:
-                pushfunc(connections,(graph[child,gchild],child,gchild))
+                pushFunc(connections,(graph[child,gchild],child,gchild))
 
     return sum(mst[vertex] for vertex in mst)
 
