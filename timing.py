@@ -3,9 +3,9 @@ import numpy as np
 from matplotlib import pyplot as plt
 from scipy.interpolate import make_interp_spline
 from statistics import mean
-from Graph import UndirectedGraph
-import Prim
-import Kruskal
+from graph import UndirectedGraph
+import prim
+import kruskal
 
 NUM_ITERATIONS = 10
 
@@ -70,56 +70,56 @@ def makeGraph(filename,tables,labels,k=2,mx=float('inf')):
 def collectData():
     denseGraphs = [UndirectedGraph(filename) for filename in DENSE_FILES]
 
-    denseTimesKruskalList = {file[:file.find('V')]: timeFunc(Kruskal.kruskalWithList,graph) 
+    denseTimesKruskalList = {file[:file.find('V')]: timeFunc(kruskal.kruskalWithList,graph) 
         for file,graph in zip(DENSE_FILES,denseGraphs)}
     saveTime(DENSE_SAVE_FILE_KRUSKAL_LIST,denseTimesKruskalList)
 
-    denseTimesKruskalBinHeap = {file[:file.find('V')]: timeFunc(Kruskal.kruskalWithBinaryHeap,graph) 
+    denseTimesKruskalBinHeap = {file[:file.find('V')]: timeFunc(kruskal.kruskalWithBinaryHeap,graph) 
         for file,graph in zip(DENSE_FILES,denseGraphs)}
     saveTime(DENSE_SAVE_FILE_KRUSKAL_BINHEAP,denseTimesKruskalBinHeap)
 
-    denseTimesKruskalFibHeap = {file[:file.find('V')]: timeFunc(Kruskal.kruskalWithFibonacciHeap,graph) 
+    denseTimesKruskalFibHeap = {file[:file.find('V')]: timeFunc(kruskal.kruskalWithFibonacciHeap,graph) 
         for file,graph in zip(DENSE_FILES,denseGraphs)}
     saveTime(DENSE_SAVE_FILE_KRUSKAL_FIBHEAP,denseTimesKruskalFibHeap)
 
 
-    denseTimesPrimList = {file[:file.find('V')]: timeFunc(Prim.primWithList,graph) 
+    denseTimesPrimList = {file[:file.find('V')]: timeFunc(prim.primWithList,graph) 
         for file,graph in zip(DENSE_FILES,denseGraphs)}
     saveTime(DENSE_SAVE_FILE_PRIM_LIST,denseTimesPrimList)
 
-    denseTimesPrimBinHeap = {file[:file.find('V')]: timeFunc(Prim.primWithBinaryHeap,graph) 
+    denseTimesPrimBinHeap = {file[:file.find('V')]: timeFunc(prim.primWithBinaryHeap,graph) 
         for file,graph in zip(DENSE_FILES,denseGraphs)}
     saveTime(DENSE_SAVE_FILE_PRIM_BINHEAP,denseTimesPrimBinHeap)
 
-    denseTimesPrimFibHeap = {file[:file.find('V')]: timeFunc(Prim.primWithFibonacciHeap,graph) 
+    denseTimesPrimFibHeap = {file[:file.find('V')]: timeFunc(prim.primWithFibonacciHeap,graph) 
         for file,graph in zip(DENSE_FILES,denseGraphs)}
     saveTime(DENSE_SAVE_FILE_PRIM_FIBHEAP,denseTimesPrimFibHeap)
 
 
     sparseGraphs = [UndirectedGraph(filename) for filename in SPARSE_FILES]
 
-    sparseTimesKruskalList = {file[:file.find('V')]: timeFunc(Kruskal.kruskalWithList,graph) 
+    sparseTimesKruskalList = {file[:file.find('V')]: timeFunc(kruskal.kruskalWithList,graph) 
         for file,graph in zip(SPARSE_FILES,sparseGraphs)}
     saveTime(SPARSE_SAVE_FILE_KRUSKAL_LIST,sparseTimesKruskalList)
 
-    sparseTimesKruskalBinHeap = {file[:file.find('V')]: timeFunc(Kruskal.kruskalWithBinaryHeap,graph) 
+    sparseTimesKruskalBinHeap = {file[:file.find('V')]: timeFunc(kruskal.kruskalWithBinaryHeap,graph) 
         for file,graph in zip(SPARSE_FILES,sparseGraphs)}
     saveTime(SPARSE_SAVE_FILE_KRUSKAL_BINHEAP,sparseTimesKruskalBinHeap)
 
-    sparseTimesKruskalFibHeap = {file[:file.find('V')]: timeFunc(Kruskal.kruskalWithFibonacciHeap,graph) 
+    sparseTimesKruskalFibHeap = {file[:file.find('V')]: timeFunc(kruskal.kruskalWithFibonacciHeap,graph) 
         for file,graph in zip(SPARSE_FILES,sparseGraphs)}
     saveTime(SPARSE_SAVE_FILE_KRUSKAL_FIBHEAP,sparseTimesKruskalFibHeap)
 
 
-    sparseTimesPrimList = {file[:file.find('V')]: timeFunc(Prim.primWithList,graph) 
+    sparseTimesPrimList = {file[:file.find('V')]: timeFunc(prim.primWithList,graph) 
         for file,graph in zip(SPARSE_FILES,sparseGraphs)}
     saveTime(SPARSE_SAVE_FILE_PRIM_LIST,sparseTimesPrimList)
 
-    sparseTimesPrimBinHeap = {file[:file.find('V')]: timeFunc(Prim.primWithBinaryHeap,graph) 
+    sparseTimesPrimBinHeap = {file[:file.find('V')]: timeFunc(prim.primWithBinaryHeap,graph) 
         for file,graph in zip(SPARSE_FILES,sparseGraphs)}
     saveTime(SPARSE_SAVE_FILE_PRIM_BINHEAP,sparseTimesPrimBinHeap)
 
-    sparseTimesPrimFibHeap = {file[:file.find('V')]: timeFunc(Prim.primWithFibonacciHeap,graph) 
+    sparseTimesPrimFibHeap = {file[:file.find('V')]: timeFunc(prim.primWithFibonacciHeap,graph) 
         for file,graph in zip(SPARSE_FILES,sparseGraphs)}
     saveTime(SPARSE_SAVE_FILE_PRIM_FIBHEAP,sparseTimesPrimFibHeap)
 
