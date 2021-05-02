@@ -1,0 +1,6 @@
+<function kruskalWithList at 0x1F80C0C0>: [2776985001800]
+<function kruskalWithBinaryHeap at 0x1F80C108>: [1732086300]
+<function kruskalWithFibonacciHeap at 0x1F80C2B8>: [736184637700]
+<function primWithList at 0x1F803A50>: [29915888800]
+<function primWithBinaryHeap at 0x1F803F60>: [1137848000]
+<function primWithFibonacciHeap at 0x1F803FA8>: [9859318000]
