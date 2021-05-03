@@ -4,10 +4,6 @@ from graph import UndirectedGraph
 import prim
 import kruskal
 
-DENSE_FILES = ['4Vdense.txt', '16Vdense.txt', '32Vdense.txt', '64Vdense.txt', '128Vdense.txt', '256Vdense.txt', 
-    '512Vdense.txt', '1024Vdense.txt', '2048Vdense.txt', '4096Vdense.txt']
-SPARSE_FILES = ['4Vsparse.txt'] + [str(16*(2**i)) + 'Vsparse.txt' for i in range(18)]
-
 def timeFunc(func, numIterations, *args):
     def timeIter():
         start = time.time_ns()
