@@ -1,6 +1,7 @@
 import heapq
 import fibheap
 import random
+import sys
 from graph import UndirectedGraph
 
 def __prim(graph: UndirectedGraph, initFunc, popFunc, pushFunc) -> float:
@@ -37,8 +38,10 @@ def primWithFibonacciHeap(graph: UndirectedGraph) -> float:
     return __prim(graph, fibheap.makefheap, fibheap.fheappop, fibheap.fheappush)
 
 if __name__ == '__main__':
-    graph = UndirectedGraph('4Vdense.txt')
+    if len(sys.argv) != 2: exit()
 
-    print(primWithList(graph))
-    print(primWithBinaryHeap(graph))
-    print(primWithFibonacciHeap(graph))
+    graph = UndirectedGraph(sys.argv[1])
+
+    print('MST calculated using list: ', primWithList(graph))
+    print('MST calculated using binary heap: ', primWithBinaryHeap(graph))
+    print('MST calculated using Fibonacci heap: ', primWithFibonacciHeap(graph))

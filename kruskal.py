@@ -1,5 +1,6 @@
 import heapq
 import fibheap
+import sys
 from graph import UndirectedGraph
 from union_find import UF
 
@@ -34,8 +35,10 @@ def kruskalWithFibonacciHeap(graph: UndirectedGraph) -> float:
     return __kruskal(graph, fibheap.makefheap, fibheap.fheappop, fibheap.fheappush)
 
 if __name__ == '__main__':
-    graph = UndirectedGraph('4Vdense.txt')
+    if len(sys.argv) != 2: exit()
 
-    print(kruskalWithList(graph))
-    print(kruskalWithBinaryHeap(graph))
-    print(kruskalWithFibonacciHeap(graph))
+    graph = UndirectedGraph(sys.argv[1])
+
+    print('MST calculated using list: ', kruskalWithList(graph))
+    print('MST calculated using binary heap: ', kruskalWithBinaryHeap(graph))
+    print('MST calculated using Fibonacci heap: ', kruskalWithFibonacciHeap(graph))
